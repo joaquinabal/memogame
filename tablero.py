@@ -10,7 +10,10 @@ def crear_tablero():
     Retorna un dict tablero
     '''
     tablero = {}
-    # COMPLETAR
+    tablero["tarjetas"] = generar_lista_tarjetas()
+    tablero["tiempo_utlimo_destape"] = 0
+    tablero["primer_tarjeta_seleccionada"] = None
+    tablero["segunda_tarjeta_seleccionada"] = None
     return tablero
 
 def generar_lista_tarjetas()->list:
@@ -31,8 +34,8 @@ def generar_lista_tarjetas()->list:
 
     for x in range(0, CANTIDAD_TARJETAS_H * ANCHO_TARJETA, ANCHO_TARJETA):
         for y in range(0, CANTIDAD_TARJETAS_V * ALTO_TARJETA, ALTO_TARJETA):
-            pass
-            # COMPLETAR
+            tarjeta.crear_tarjeta("recursos/0{0}.png".format(lista_id[indice]), lista_id[indice],"recursos/00.png", x, y)
+            indice += 1
     
     return lista_tarjetas
 
@@ -81,6 +84,10 @@ def dibujar_tablero(tablero: dict, pantalla_juego: pygame.Surface):
     Dibuja todos los elementos del tablero en la superficie recibida como parametro
     Recibe como parametro el tablero y la ventana principal
     '''
-    pass
-    # COMPLETAR
+    for tarjeta in tablero["tarjetas"]:
+        if tarjeta["visible"]:
+            pantalla_juego.blit(tarjeta["superficie"], (tarjeta["rectangulo"].left,tarjeta["rectangulo"].top))
+        else:
+            pantalla_juego.blit(tarjeta["superficie_escondida"], (tarjeta["rectangulo"].left,tarjeta["rectangulo"].top))            
+
    

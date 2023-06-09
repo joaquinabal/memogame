@@ -9,9 +9,15 @@ def crear_tarjeta(nombre_imagen: str, identificador: int, nombre_imagen_escondid
     Retorna la tarjeta creada
     '''
     tarjeta = {}
-    # COMPLETAR
+    tarjeta["superficie"] = pygame.image.load(nombre_imagen)
+    tarjeta["superficie_escondida"] = pygame.image.load(nombre_imagen_escondida)
+    tarjeta["identificador"] = identificador
+    tarjeta["visible"] = False
+    tarjeta["descubierto"] = False
+    tarjeta["rectangulo"] = tarjeta["superficie"].get_rect()    
+    tarjeta["rectangulo"].centerx = x
+    tarjeta["rectangulo"].centery = y
     return tarjeta
-
 
 def obtener_cantidad_tarjetas_por_estado(lista_tarjetas: list[dict], estado: bool) -> int:
     '''
