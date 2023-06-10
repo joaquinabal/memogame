@@ -11,7 +11,7 @@ def crear_tablero():
     '''
     tablero = {}
     tablero["tarjetas"] = generar_lista_tarjetas()
-    tablero["tiempo_utlimo_destape"] = 0
+    tablero["tiempo_ultimo_destape"] = 0
     tablero["primer_tarjeta_seleccionada"] = None
     tablero["segunda_tarjeta_seleccionada"] = None
     return tablero
@@ -33,10 +33,9 @@ def generar_lista_tarjetas()->list:
     print(lista_id)
 
     for x in range(0, CANTIDAD_TARJETAS_H * ANCHO_TARJETA, ANCHO_TARJETA):
-        for y in range(0, CANTIDAD_TARJETAS_V * ALTO_TARJETA, ALTO_TARJETA):
-            tarjeta.crear_tarjeta("recursos/0{0}.png".format(lista_id[indice]), lista_id[indice],"recursos/00.png", x, y)
+        for y in range(0, CANTIDAD_TARJETAS_V * ALTO_TARJETA, ALTO_TARJETA):            
+            lista_tarjetas.append(tarjeta.crear_tarjeta("recursos/0{0}.png".format(lista_id[indice]), lista_id[indice],"recursos/00.png", x, y))
             indice += 1
-    
     return lista_tarjetas
 
 def generar_lista_ids_tarjetas():
@@ -52,7 +51,19 @@ def detectar_colision(tablero: dict, pos_xy: tuple) -> int  :
     Recibe como parametro el tablero y una tupla (X,Y)
     Retorna el identificador de la tarjeta que colisiono con el mouse y sino retorna None
     '''
-    pass
+    tiempo_actual = pygame.time.get_ticks()
+    for tarjeta in tablero["tarjetas"]:
+        if tarjeta["rectangulo"].collidepoint(pos_xy):
+            tarjeta["visible"] = True
+            if not tablero["primer_tarjeta_seleccionada"]:
+                tablero["primer_tarjeta_seleccionada"] = tarjeta
+                print(tarjeta)
+            else:
+                tablero["segunda_tarjeta_seleccionada"] = tarjeta
+                print(tarjeta)
+            tarjeta["tiempo_ultimo_destape"] = tiempo_actual - pygame.time.get_ticks()
+            return tarjeta["identificador"]
+
     # COMPLETAR
 
 def actualizar_tablero(tablero: dict) -> None:
@@ -61,9 +72,18 @@ def actualizar_tablero(tablero: dict) -> None:
     Recibe como parametro el tablero
     '''
     tiempo_actual = pygame.time.get_ticks()
+    tiempo_transcurrido = tiempo_actual - tablero["tiempo_ultimo_destape"]
+    if tiempo_transcurrido > TIEMPO_MOVIMIENTO:
+        tablero["tiempo_ultimo_destape"] = 0
+        for tarjeta in tablero["tarjetas"]:
+            if tarjeta["descubierto"] == False:
+                tarjeta["visible"] == False
+        tablero["primer_tarjeta_seleccionada"] = None
+        tablero["segunda_tarjeta_seleccionada"] = None
+    comparar_tarjetas(tablero)
     # COMPLETAR
 
-def comprarar_tarjetas(tablero: dict) -> bool | None:
+def comparar_tarjetas(tablero: dict) -> bool | None:
     '''
     Funcion que se encarga de encontrar un match en la selección de las tarjetas del usuario.
     Si el usuario selecciono dos tarjetas está función se encargara de verificar si el identificador 
@@ -86,8 +106,8 @@ def dibujar_tablero(tablero: dict, pantalla_juego: pygame.Surface):
     '''
     for tarjeta in tablero["tarjetas"]:
         if tarjeta["visible"]:
-            pantalla_juego.blit(tarjeta["superficie"], (tarjeta["rectangulo"].left,tarjeta["rectangulo"].top))
+            pantalla_juego.blit(tarjeta["superficie"], (tarjeta["rectangulo"].x,tarjeta["rectangulo"].y))
         else:
-            pantalla_juego.blit(tarjeta["superficie_escondida"], (tarjeta["rectangulo"].left,tarjeta["rectangulo"].top))            
+            pantalla_juego.blit(tarjeta["superficie_escondida"], (tarjeta["rectangulo"].x,tarjeta["rectangulo"].y))            
 
    
