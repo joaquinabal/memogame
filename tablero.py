@@ -33,14 +33,8 @@ def generar_lista_tarjetas()->list:
     print(lista_id)
 
     for x in range(0, CANTIDAD_TARJETAS_H * ANCHO_TARJETA, ANCHO_TARJETA):
-<<<<<<< HEAD
         for y in range(0, CANTIDAD_TARJETAS_V * ALTO_TARJETA, ALTO_TARJETA):            
             lista_tarjetas.append(tarjeta.crear_tarjeta("recursos/0{0}.png".format(lista_id[indice]), lista_id[indice],"recursos/00.png", x, y))
-=======
-        for y in range(0, CANTIDAD_TARJETAS_V * ALTO_TARJETA, ALTO_TARJETA):
-            tarjeta_nueva = tarjeta.crear_tarjeta("recursos/0{0}.png".format(lista_id[indice]), lista_id[indice],"recursos/00.png", x, y)
-            lista_tarjetas.append(tarjeta_nueva)
->>>>>>> a19e8d5be5e4071201501d0b2768573aa08e7996
             indice += 1
     return lista_tarjetas
 
